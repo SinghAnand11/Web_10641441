@@ -17,6 +17,32 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
       })
     );
   };
+  const handleDelete = (id) => {
+    console.log({id},"HERE");
+    const itemIdToDelete = {id};
+
+    fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/product/:${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to delete item');
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        // Handle success (e.g., show a confirmation message)
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle error (e.g., show an error message)
+      });
+  };
   return (
     <div className="w-full min-w-[200px] max-w-[200px] bg-white hover:shadow-lg drop-shadow-lg  py-5 px-4 cursor-pointer flex flex-col ">
       {image ? (
@@ -44,6 +70,11 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
             {" "}
             Add Cart
           </button>
+          <button
+            className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
+            onClick={()=>{handleDelete(id)}}
+          > Delete Item
+            </button>
         </>
       ) : (
         <div className="min-h-[150px] flex justify-center items-center">

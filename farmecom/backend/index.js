@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
+const mongo = require('mongodb')
 
 const app = express();
 app.use(cors());
@@ -106,6 +107,47 @@ app.get("/product", async (req, res) => {
   const data = await productModel.find({});
   res.send(JSON.stringify(data));
 });
+
+app.delete('/product/:id', async (req, res) => {
+  const id = req.params.id;
+  const itemId = id.slice(1);
+  console.log(typeof JSON.stringify(itemId))
+
+  try {
+    // Use the MongoDB model to delete the item by ID
+    console.log("heree= >>>>", itemId )
+    console.log("heree= >>>>", typeof itemId, )
+    productModel.findOne({ _id: itemId }, (err, result) => {
+      if (err) {
+        console.error('Error checking if item exists:', err);
+      } else if (result) {
+        console.log('Item exists:', result);
+      } else {
+        console.log('Item does not exist.');
+      }
+    })
+    await productModel.findByIdAndRemove(itemId);
+    res.status(200).json({ message: 'Item deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error deleting item' });
+  }
+})
+
+// app.delete('/product/:id', function (req, res) {
+//   const ids = req.params.id;
+//   const id = ids.slice(1)
+//     console.log("heree= >>>>", id, { id })
+//     console.log("heree= >>>>", typeof id, typeof { id })
+//   async function deleteUser(id) {
+//     try {
+//       await productModel.deleteOne({ _id: id });
+//       console.log('User deleted successfully', id);
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+// });
 
 //server running
 app.listen(PORT, () => console.log("server is running at port:" + PORT));

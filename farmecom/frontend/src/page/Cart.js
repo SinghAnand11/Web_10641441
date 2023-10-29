@@ -60,7 +60,7 @@ const Cart = () => {
                 <p>Total Price</p>
                 <p className="ml-auto w-32 font-bold">
                   {" "}
-                  <span className="text-red-500">₹</span>
+                  <span className="text-red-500">£</span>
                   {totalPrice}
                 </p>
               </div>
