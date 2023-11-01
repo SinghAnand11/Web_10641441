@@ -11,6 +11,7 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const userData = useSelector((state) => state.user);
   console.log(userData.email);
+  console.log(userData.firstName);
   const dispatch = useDispatch();
 
   const handleShowMenu = () => {
@@ -65,13 +66,16 @@ const Header = () => {
                   </Link>
                 )}
 
-                {userData.image ? (
-                  <p
-                    className="cursor-pointer text-white px-2 bg-red-500 "
-                    onClick={handleLogout}
-                  >
-                    Logout ({userData.firstName})
-                  </p>
+                {userData.isloggedIn ? (
+                  <div>
+                    Admin
+                    <p
+                      className="cursor-pointer text-white px-2 bg-red-500 "
+                      onClick={handleLogout}
+                    >
+                      Logout ({userData.firstName})
+                    </p>
+                  </div>
                 ) : (
                   <Link
                     to={"login"}

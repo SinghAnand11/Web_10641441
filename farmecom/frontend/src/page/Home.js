@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import HomeCard from "../component/HomeCard";
 import { useSelector } from "react-redux";
 import CardFeature from "../component/CardFeature";
 import { GrPrevious, GrNext } from "react-icons/gr";
-import FilterProduct from "../component/FilterProduct";
 import AllProduct from "../component/AllProduct";
 
 const Home = () => {
@@ -46,33 +45,33 @@ const Home = () => {
             <span className="text-red-600 "> Farmers</span>
           </h2>
           <p className="py-2 text-base ">
-          The agricultural sector is considered as the backbone of the economy.
-          However, the sector faces numerous challenges.One of the major problems is
-          the inefficient distribution/supply chain system, which is the focus of this project.
+            The agricultural sector is considered as the backbone of the economy.
+            However, the sector faces numerous challenges.One of the major problems is
+            the inefficient distribution/supply chain system, which is the focus of this project.
           </p>
           <button className="font-bold bg-red-500 text-slate-200 px-4 py-2 rounded-md">
-            Order Now
+            <a href="Cart">Go To Cart</a>
           </button>
         </div>
         <div className="md:w-1/2 flex flex-wrap gap-5 p-4 justify-center ">
           {homeProductCartList[0]
             ? homeProductCartList.map((el) => {
-                return (
-                  <HomeCard
-                    key={el._id}
-                    id={el._id}
-                    image={el.image}
-                    name={el.name}
-                    price={el.price}
-                    category={el.category}
-                  />
-                );
-              })
+              return (
+                <HomeCard
+                  key={el._id}
+                  id={el._id}
+                  image={el.image}
+                  name={el.name}
+                  price={el.price}
+                  category={el.category}
+                />
+              );
+            })
             : loadingArray.map((el, index) => {
-                return (
-                  <HomeCard key={index + "loading"} loading={"Loading..."} />
-                );
-              })}
+              return (
+                <HomeCard key={index + "loading"} loading={"Loading..."} />
+              );
+            })}
         </div>
       </div>
       <div className="">
@@ -101,20 +100,20 @@ const Home = () => {
         >
           {homeProductCartListVegetables[0]
             ? homeProductCartListVegetables.map((el) => {
-                return (
-                  <CardFeature
-                    key={el._id + "vegetable"}
-                    id={el._id}
-                    image={el.image}
-                    name={el.name}
-                    price={el.price}
-                    category={el.category}
-                  />
-                );
-              })
+              return (
+                <CardFeature
+                  key={el._id + "vegetable"}
+                  id={el._id}
+                  image={el.image}
+                  name={el.name}
+                  price={el.price}
+                  category={el.category}
+                />
+              );
+            })
             : loadingArrayFeature.map((el, index) => (
-                <CardFeature loading="Loading..." key={index + "cartLoading"} />
-              ))}
+              <CardFeature loading="Loading..." key={index + "cartLoading"} />
+            ))}
         </div>
       </div>
       <AllProduct heading={"Your Product"} />

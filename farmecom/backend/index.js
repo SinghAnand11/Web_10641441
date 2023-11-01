@@ -115,8 +115,6 @@ app.delete('/product/:id', async (req, res) => {
 
   try {
     // Use the MongoDB model to delete the item by ID
-    console.log("heree= >>>>", itemId )
-    console.log("heree= >>>>", typeof itemId, )
     productModel.findOne({ _id: itemId }, (err, result) => {
       if (err) {
         console.error('Error checking if item exists:', err);
@@ -133,21 +131,6 @@ app.delete('/product/:id', async (req, res) => {
     res.status(500).json({ error: 'Error deleting item' });
   }
 })
-
-// app.delete('/product/:id', function (req, res) {
-//   const ids = req.params.id;
-//   const id = ids.slice(1)
-//     console.log("heree= >>>>", id, { id })
-//     console.log("heree= >>>>", typeof id, typeof { id })
-//   async function deleteUser(id) {
-//     try {
-//       await productModel.deleteOne({ _id: id });
-//       console.log('User deleted successfully', id);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-// });
 
 //server running
 app.listen(PORT, () => console.log("server is running at port:" + PORT));

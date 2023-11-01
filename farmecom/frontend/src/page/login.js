@@ -57,8 +57,6 @@ const Login = () => {
         }, 1000);
       }
       console.log(userData);
-    } else {
-      alert("Please enter requires field");
     }
   };
   return (
@@ -66,6 +64,9 @@ const Login = () => {
       <div className="w-full max-w-sm bg-white m-auto flex justify-center flex-col p-4">
         <div className="w-20 overflow-hidden rounded-full drop-shadow-md shadow m-auto">
           <img src={loginSignupImage} alt="" className="w-full" />
+        </div>
+        <div className="m-auto">
+          Login as Admin
         </div>
         <form className="w-full py-3 flex flex-col" onClick={handleSubmit}>
           <label htmlFor="email">Email</label>

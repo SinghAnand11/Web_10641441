@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addCartItem } from "../redux/productSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const CardFeature = ({ image, name, price, category, loading, id }) => {
+  const userData = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleAddCartProduct = (e) => {
     // e.stopPropogation();
@@ -18,8 +20,8 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
     );
   };
   const handleDelete = (id) => {
-    console.log({id},"HERE");
-    const itemIdToDelete = {id};
+    console.log({ id }, "HERE");
+    const itemIdToDelete = { id };
 
     fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/product/:${id}`, {
       method: 'DELETE',
@@ -29,6 +31,10 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
     })
       .then((response) => {
         if (response.ok) {
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+          console.log("Item Deleted", id);
           return response.json();
         } else {
           throw new Error('Failed to delete item');
@@ -42,6 +48,7 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
         console.error(error);
         // Handle error (e.g., show an error message)
       });
+
   };
   return (
     <div className="w-full min-w-[200px] max-w-[200px] bg-white hover:shadow-lg drop-shadow-lg  py-5 px-4 cursor-pointer flex flex-col ">
@@ -70,11 +77,13 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
             {" "}
             Add Cart
           </button>
-          <button
-            className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
-            onClick={()=>{handleDelete(id)}}
-          > Delete Item
+          {userData.isloggedIn &&
+            <button
+              className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
+              onClick={() => { handleDelete(id) }}
+            > Delete Item
             </button>
+          }
         </>
       ) : (
         <div className="min-h-[150px] flex justify-center items-center">
