@@ -4,9 +4,8 @@ import CardFeature from "./CardFeature";
 import { useSelector } from "react-redux";
 
 const AllProduct = ({ heading }) => {
-  const productData = useSelector((state) => state.product.productList);
+  const productData = useSelector((state) => state.productSlice.productList);
   const categoryList = [...new Set(productData.map((el) => el.category))];
-  // console.log(categoryList);
   const [filterby, setFilterBy] = useState("");
   const [dataFilter, setDataFilter] = useState([]);
 
@@ -50,12 +49,14 @@ const AllProduct = ({ heading }) => {
           ? dataFilter.map((el) => {
               return (
                 <CardFeature
+                  wholeProduct={el}
                   key={el._id}
                   id={el._id}
                   image={el.image}
                   name={el.name}
                   category={el.category}
                   price={el.price}
+                  deleted={el.deleted}
                 />
               );
             })

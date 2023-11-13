@@ -1,57 +1,25 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { addCartItem } from "../redux/productSlice";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { addCartItem, updateProductByIdAsync } from "../features/product/ProductSlice";
+import { selectLoggedInUser } from "../features/auth/AuthSlice";
+import { addToCartAsync } from "../features/cart/CartSlice";
 
-const CardFeature = ({ image, name, price, category, loading, id }) => {
-  const userData = useSelector((state) => state.user);
-  const navigate = useNavigate();
+const CardFeature = ({ wholeProduct,image, name, price, category, loading, id ,deleted}) => {
   const dispatch = useDispatch();
   const handleAddCartProduct = (e) => {
-    // e.stopPropogation();
-    dispatch(
-      addCartItem({
-        _id: id,
-        name: name,
-        price: price,
-        category: category,
-        image: image,
-      })
-    );
+    const data={user:user._id,product:id}
+    dispatch(addToCartAsync(data))
   };
-  const handleDelete = (id) => {
-    console.log({ id }, "HERE");
-    const itemIdToDelete = { id };
-
-    fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/product/:${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-          console.log("Item Deleted", id);
-          return response.json();
-        } else {
-          throw new Error('Failed to delete item');
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        // Handle success (e.g., show a confirmation message)
-      })
-      .catch((error) => {
-        console.error(error);
-        // Handle error (e.g., show an error message)
-      });
-
+  const user=useSelector(selectLoggedInUser)
+  const handleDelete=()=>{
+    // const data={...wholeProduct,[deleted]:true}
+    const data={_id:id,deleted:deleted?false:true}
+    console.log(data)
+    dispatch(updateProductByIdAsync(data))
   };
   return (
-    <div className="w-full min-w-[200px] max-w-[200px] bg-white hover:shadow-lg drop-shadow-lg  py-5 px-4 cursor-pointer flex flex-col ">
+    <div style={{opacity:deleted?0.6:1}} className="w-full min-w-[200px] max-w-[200px] bg-white hover:shadow-lg drop-shadow-lg  py-5 px-4 cursor-pointer flex flex-col ">
       {image ? (
         <>
           <Link
@@ -70,18 +38,22 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
               <span>{price}</span>
             </p>
           </Link>
-          <button
+          {
+            user?.role!=='admin' &&   <button
             className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
             onClick={handleAddCartProduct}
           >
             {" "}
             Add Cart
           </button>
-          {userData.isloggedIn &&
-            <button
-              className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
-              onClick={() => { handleDelete(id) }}
-            > Delete Item
+          }
+
+
+          {user.role==='admin' && 
+          <button
+            className="bg-red-500 py-1 mt-2 rounded hover:bg-red-600 w-full"
+            onClick={handleDelete}
+          > {deleted?"Un-Delete":"Delete Item"}
             </button>
           }
         </>

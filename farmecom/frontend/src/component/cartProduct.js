@@ -2,14 +2,37 @@ import React from "react";
 import { TbMinus, TbPlus } from "react-icons/tb";
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import {
-  deleteCartItem,
-  increaseQty,
-  decreaseQty,
-} from "../redux/productSlice";
+import { deleteCartItem ,addCartItem,increaseQty,decreaseQty} from "../features/product/ProductSlice";
+import { deleteCartItemByIdAsync, updateCartItemByIdAsync } from "../features/cart/CartSlice";
+
 
 const CartProduct = ({ id, name, image, category, qty, total, price }) => {
+
   const dispatch = useDispatch();
+
+  const handleIncrease=()=>{
+    if(qty===10){
+      alert("Quantity cannot be over 10")
+    }
+    else{
+      const quantity=qty+1
+      const update={_id:id,quantity:quantity}
+      dispatch(updateCartItemByIdAsync(update))
+    }
+  }
+
+  const handleMinus=()=>{
+
+    if(qty===1){
+
+    }
+    else{
+      const quantity=qty-1
+      const update={_id:id,quantity:quantity}
+      dispatch(updateCartItemByIdAsync(update))
+    }
+  }
+
   return (
     <div className="bg-slate-200 p-2 flex gap-4 rounded border border-slate-300">
       <div className="p-3 bg-white  rounded overflow-hidden">
@@ -22,7 +45,7 @@ const CartProduct = ({ id, name, image, category, qty, total, price }) => {
           </h3>
           <div
             className="cursor-pointer  text-slate-700 hover:text-red-500"
-            onClick={() => dispatch(deleteCartItem(id))}
+            onClick={() => dispatch(deleteCartItemByIdAsync(id))}
           >
             <AiFillDelete />
           </div>
@@ -34,16 +57,14 @@ const CartProduct = ({ id, name, image, category, qty, total, price }) => {
         </p>
         <div className="flex justify-between ">
           <div className=" flex gap-3 items-center">
-            <button
-              onClick={() => dispatch(increaseQty(id))}
+            <button onClick={handleIncrease}
               className="bg-slate-300 py-1 mt-2 rounded hover:bg-slate-400 p-1"
             >
               {" "}
               <TbPlus />
             </button>
             <p className="font-semibold p-1 ">{qty}</p>
-            <button
-              onClick={() => dispatch(decreaseQty(id))}
+            <button onClick={handleMinus}
               className="bg-slate-300 py-1 mt-2 rounded hover:bg-slate-400 p-1"
             >
               {" "}
