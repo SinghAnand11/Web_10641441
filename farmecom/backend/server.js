@@ -14,10 +14,11 @@ const cartRoutes=require("./routes/Cart")
 connectTodB()
 
 // middleware
+server.use(express.json({ limit: '10mb' }));
 server.use(cors({origin:"http://localhost:3000",credentials:true}));
-server.use(express.json())
 server.use(cookieParser())
 server.use(morgan("tiny"))
+
 
 
 // route middlewares

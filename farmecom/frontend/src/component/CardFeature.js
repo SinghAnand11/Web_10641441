@@ -5,9 +5,11 @@ import { addCartItem, updateProductByIdAsync } from "../features/product/Product
 import { selectLoggedInUser } from "../features/auth/AuthSlice";
 import { addToCartAsync } from "../features/cart/CartSlice";
 
-const CardFeature = ({ wholeProduct,image, name, price, category, loading, id ,deleted}) => {
+const CardFeature = ({showSnack, wholeProduct,image, name, price, category, loading, id ,deleted}) => {
+  
   const dispatch = useDispatch();
   const handleAddCartProduct = (e) => {
+    showSnack()
     const data={user:user._id,product:id}
     dispatch(addToCartAsync(data))
   };

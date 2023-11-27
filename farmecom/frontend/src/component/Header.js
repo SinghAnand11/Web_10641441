@@ -46,7 +46,8 @@ const Header = () => {
           }
 
 
-          {cartItems.length>0 && 
+          {
+          userData!==null ?(cartItems.length>0 && 
           
                     <div className="text-2xl text-slate-600 relative">
             <Link to={"/cart"}>
@@ -55,7 +56,7 @@ const Header = () => {
                 {cartItems.length}
               </div>
             </Link>
-          </div>
+          </div>):''
           }
 
           <div className=" text-slate-600" onClick={handleShowMenu}>

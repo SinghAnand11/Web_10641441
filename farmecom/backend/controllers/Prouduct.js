@@ -44,6 +44,7 @@ exports.getById=async(req,res)=>{
     try {
         const {id}=req.params
         const product=await Product.findById(id)
+        console.log(product)
         res.status(200).json(product)
     } catch (error) {
         console.log(error)

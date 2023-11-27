@@ -2,20 +2,67 @@ import React, { useEffect, useState } from "react";
 import FilterProduct from "./FilterProduct";
 import CardFeature from "./CardFeature";
 import { useSelector } from "react-redux";
+import { Snackbar } from "@mui/material";
+import Slide from '@mui/material/Slide';
+import Grow from '@mui/material/Grow';
 
 const AllProduct = ({ heading }) => {
-  const productData = useSelector((state) => state.productSlice.productList);
+
+  function SlideTransition(props) {
+    return <Slide {...props} direction="up" />;
+  }
+  
+  function GrowTransition(props) {
+    return <Grow {...props} />;
+  }
+  
+
+    const [state, setState] = React.useState({
+      open: false,
+      Transition: SlideTransition,
+    });
+  
+    const handleClick = (Transition) => () => {
+      setState({
+        open: true,
+        Transition:SlideTransition,
+      });
+    };
+  
+    const handleClose = () => {
+      setState({
+        ...state,
+        open: false,
+      });
+    };
+    const [productData,setProuductData]=useState([])
+    const [cleanedProudctDatat,setCleandedProductDatat]=useState([])
+
+    const products=useSelector((state) => state.productSlice.productList);
+
+    useEffect(()=>{
+      setProuductData(products)
+    },[products])
+
+
+    useEffect(()=>{
+      if(productData){
+        const cledanded=productData?.filter(item => item !== undefined);
+        setCleandedProductDatat(cledanded)
+      }
+    },[productData])
+
   const categoryList = [...new Set(productData.map((el) => el.category))];
   const [filterby, setFilterBy] = useState("");
   const [dataFilter, setDataFilter] = useState([]);
 
   useEffect(() => {
-    setDataFilter(productData);
-  }, [productData]);
+    setDataFilter(cleanedProudctDatat);
+  }, [cleanedProudctDatat]);
 
   const handleFilterProduct = (category) => {
     setFilterBy(category);
-    const filter = productData.filter(
+    const filter = cleanedProudctDatat?.filter(
       (el) => el.category.toLowerCase() === category.toLowerCase()
     );
     setDataFilter(() => {
@@ -49,6 +96,7 @@ const AllProduct = ({ heading }) => {
           ? dataFilter.map((el) => {
               return (
                 <CardFeature
+                showSnack={()=>setState({...state,open:true})}
                   wholeProduct={el}
                   key={el._id}
                   id={el._id}
@@ -64,6 +112,13 @@ const AllProduct = ({ heading }) => {
               <CardFeature loading="Loading..." key={index + "allProduct"} />
             ))}
       </div>
+      <Snackbar
+        open={state.open}
+        onClose={handleClose}
+        TransitionComponent={state.Transition}
+        message="Item added to Cart"
+        key={state.Transition.name}
+      />
     </div>
   );
 };

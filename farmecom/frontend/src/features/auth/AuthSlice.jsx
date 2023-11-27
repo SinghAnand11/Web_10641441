@@ -28,7 +28,11 @@ export const logoutUserAsync=createAsyncThunk("auth/logoutUserAsyc",async()=>{
 export const authSlice = createSlice({
   name: "authSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    clearErrors:(state)=>{
+      state.error=null
+    }
+  },
   extraReducers:(builder)=>{
     builder
       .addCase(loginUserAsync.pending,(state)=>{
@@ -89,5 +93,8 @@ export const authSlice = createSlice({
 export const selectLoggedInUser=(state)=>state.authSlice.loggedInUser
 export const selectError=(state)=>state.authSlice.error
 export const selectisAuthChecked=(state)=>state.authSlice.isAuthChecked
+
+
+export const {clearErrors}=authSlice.actions
 
 export default authSlice.reducer;

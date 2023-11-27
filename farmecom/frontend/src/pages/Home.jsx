@@ -9,10 +9,45 @@ import { selectUserInfo } from "../features/user/UserSlice";
 import { getProductsAsync, selectProducts } from "../features/product/ProductSlice";
 import Header from "../component/Header";
 import { selectLoggedInUser } from "../features/auth/AuthSlice";
+import Snackbar from '@mui/material/Snackbar';
+import Fade from '@mui/material/Fade';
+import Slide from '@mui/material/Slide';
+import Grow from '@mui/material/Grow';
+import { Button } from "@mui/material";
+
+
 
 const Home = () => {
 
+  function SlideTransition(props) {
+    return <Slide {...props} direction="up" />;
+  }
   
+  function GrowTransition(props) {
+    return <Grow {...props} />;
+  }
+  
+
+    const [state, setState] = React.useState({
+      open: false,
+      Transition: SlideTransition,
+    });
+  
+    const handleClick = (Transition) => () => {
+      setState({
+        open: true,
+        Transition:SlideTransition,
+      });
+    };
+  
+    const handleClose = () => {
+      setState({
+        ...state,
+        open: false,
+      });
+    };
+
+
   const dispatch=useDispatch()
   const userInfo=useSelector(selectLoggedInUser)
   const productData = useSelector(selectProducts);
@@ -24,9 +59,11 @@ const Home = () => {
   },[userInfo])
   
 
-  
-  const homeProductCartList = productData?.slice(1, 5);
-  const homeProductCartListVegetables = productData?.filter(
+const homeProductCartList = productData
+  ?.filter(item => item !== undefined)
+  .slice(1, 5);
+
+  const homeProductCartListVegetables = homeProductCartList?.filter(
     (el) => el.category === "vegetable",
     []
   );
@@ -120,6 +157,7 @@ const Home = () => {
             ? homeProductCartListVegetables.map((el) => {
                 return (
                   <CardFeature
+                    showSnack={()=>setState({...state,open:true})}
                     deleted={el.deleted}
                     key={el._id + "vegetable"}
                     id={el._id}
@@ -137,6 +175,13 @@ const Home = () => {
       </div>
       <AllProduct heading={"Your Product"} />
     </div>
+    <Snackbar
+        open={state.open}
+        onClose={handleClose}
+        TransitionComponent={state.Transition}
+        message="Item added to Cart"
+        key={state.Transition.name}
+      />
     </>
       )
     }

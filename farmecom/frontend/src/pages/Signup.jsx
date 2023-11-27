@@ -28,6 +28,11 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const error=useSelector(selectError)
+  console.log(error)
+
+  useEffect(()=>{
+    console.log(error)
+  },[error])
 
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -81,7 +86,7 @@ const Signup = () => {
           </div>
 
           <div>
-                      <label style={{fontSize:"1.2rem"}} htmlFor="lastName">Last Name</label>
+            <label style={{fontSize:"1.2rem"}} htmlFor="lastName">Last Name</label>
           <input
             type={"text"}
             {...register("lastName", { required: "Last Name is required" })}
@@ -147,10 +152,10 @@ const Signup = () => {
             Sign up
           </button>
           {
-            <p>{error?.message}</p> 
+            error && <Alert severity="error">{error.message}</Alert>
           }
           {
-            welcome && <Alert severity="success">Welcome {loggedInUser.firstName}</Alert>
+            welcome && <Alert severity="success">Welcome {loggedInUser.firstName}!</Alert>
           }
           
         </form>

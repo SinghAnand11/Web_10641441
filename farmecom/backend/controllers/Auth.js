@@ -72,8 +72,10 @@ exports.login = async (req, res) => {
 
       delete existingUser.password
   
-      res.status(200).json(existingUser)
+      return res.status(200).json(existingUser)
     }
+
+    return res.status(404).json({"message":'Invalid Credentails'})
 
   } catch (error) {
     console.log(error);

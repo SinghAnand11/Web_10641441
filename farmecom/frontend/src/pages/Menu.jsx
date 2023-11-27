@@ -9,10 +9,40 @@ import { selectLoggedInUser } from "../features/auth/AuthSlice";
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import { Box, Button, Icon, IconButton, Stack, TextField } from "@mui/material";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Snackbar from '@mui/material/Snackbar';
+import Fade from '@mui/material/Fade';
+import Slide from '@mui/material/Slide';
+import Grow from '@mui/material/Grow';
 
 const Menu = () => {
+  function SlideTransition(props) {
+    return <Slide {...props} direction="up" />;
+  }
+  
+  function GrowTransition(props) {
+    return <Grow {...props} />;
+  }
+  
+
+    const [state, setState] = React.useState({
+      open: false,
+      Transition: SlideTransition,
+    });
+  
+    const handleClick = (Transition) => () => {
+      setState({
+        open: true,
+        Transition:SlideTransition,
+      });
+    };
+  
+    const handleClose = () => {
+      setState({
+        ...state,
+        open: false,
+      });
+    };
   const { filterby } = useParams();
-  console.log(filterby)
 
   const [isEditing,setIsEditing]=useState(false)
 
@@ -24,27 +54,34 @@ const Menu = () => {
     dispatch(getProductsAsync())
   },[])
 
+  const [productDisplay,setProductDisplay]=useState()
+
   const cartItems=useSelector(selectCartItems)
   const user=useSelector(selectLoggedInUser)
   const selectedProduct=useSelector(selectSelectedProduct)
-  console.log(selectedProduct)
-  const productDisplay = productData.filter((el) => el._id === filterby)[0];
+
+
+  useEffect(()=>{
+    setProductDisplay(productData.filter((el) => el._id === filterby)[0])
+  },[filterby])
 
 
 
   const handleAddCartProduct = (e) => {
     const data={product:filterby,user:user._id}
     dispatch(addToCartAsync(data))
+    setState({...state,open:true})
   };
 
   const [editedState,setEditedState]=useState({
     name:"",
     price:"",
+    description:"",
   })
 
 
   const handleEditClick=()=>{
-    setEditedState({name:selectedProduct.name,price:selectedProduct.price})
+    setEditedState({name:selectedProduct.name,price:selectedProduct.price,description:selectedProduct.description})
     setIsEditing(true)
   }
 
@@ -58,8 +95,11 @@ const Menu = () => {
 
 
   useEffect(()=>{
-    dispatch(getProductByIdAsync(filterby))
-  },[])
+    if(filterby){
+
+      dispatch(getProductByIdAsync(filterby))
+    }
+  },[filterby])
 
   const handleOnChange=(e)=>{
     setEditedState({...editedState,[e.target.name]:e.target.value})
@@ -145,14 +185,27 @@ const Menu = () => {
 
           </div>
           <div>
-            <p className="text-slate-600 font-medium">Description:</p>
-            <p>{productDisplay?.description}</p>
+            {
+              isEditing?(<TextField value={editedState.description} onChange={handleOnChange} name="description"></TextField>):(
+                <>
+                <p className="text-slate-600 font-medium">Description:</p>
+                <p>{selectedProduct?.description}</p>
+                </>
+              )
+            }
           </div>
         </div>
       </div>
 
       
       <AllProduct heading={"Related Product"} />
+      <Snackbar
+        open={state.open}
+        onClose={handleClose}
+        TransitionComponent={state.Transition}
+        message="Item added to Cart"
+        key={state.Transition.name}
+      />
     
     </div> 
     }

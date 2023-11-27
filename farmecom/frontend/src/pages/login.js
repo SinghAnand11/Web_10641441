@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import loginSignupImage from "../assest/login-animation.gif";
 import { BiShow, BiHide } from "react-icons/bi";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginUserAsync, selectError, selectLoggedInUser } from "../features/auth/AuthSlice";
+import { clearErrors, loginUserAsync, selectError, selectLoggedInUser } from "../features/auth/AuthSlice";
 import Header from '../component/Header'
 import Alert from '@mui/material/Alert';
 
@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 const Login = () => {
 
   const [showAlert,setShowAlert]=useState()
- 
+
   const {
     register,
     handleSubmit,
@@ -24,11 +24,6 @@ const Login = () => {
 
 
   const [showPassword, setShowPassword] = useState(false);
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const error=useSelector(selectError)
 
@@ -37,29 +32,36 @@ const Login = () => {
     setShowPassword((preve) => !preve);
   };
 
+  useEffect(()=>{
+    return ()=>{
+      dispatch(clearErrors())
+    }
+  },[])
+
 
   return (
     <>
-    {loggedInUser && <><Navigate to={'/'} replace={true}></Navigate>
-    </> 
-    }
+    {loggedInUser && <Navigate to={'/'} replace={true}></Navigate>}
     <Header/>
     <div className="p-3 md:p-4">
       <div className="w-full max-w-sm bg-white m-auto flex justify-center flex-col p-4">
         <div className="w-20 overflow-hidden rounded-full drop-shadow-md shadow m-auto">
           <img src={loginSignupImage} alt="" className="w-full" />
         </div>
-        <form noValidate className="w-full py-3 flex flex-col" onSubmit={handleSubmit((data)=>{
+        <form noValidate onSubmit={handleSubmit((data)=>{
           dispatch(loginUserAsync(data))
-        })}>
-          <label htmlFor="email" style={{fontSize:"1.2rem"}}>Email</label>
+          console.log(data)
+        })} className="w-full py-3 flex flex-col">
+          {/* email */}
+          <p htmlFor="email" style={{fontSize:"1.2rem"}}>Email</p>
           <input
-            type={"email"}
             {...register("email",{required:"Email is required"})}
             className=" mt-1 mb-2 w-full bg-slate-200 px-2 py-1 rounded focus-within:outline-blue-300"
           />
           <p style={{marginBottom:"1rem",color:'red'}}>{errors.email?.message}</p> 
-          <label htmlFor="password" style={{fontSize:"1.2rem"}}>Password</label>
+          
+          {/* password */}
+          <p htmlFor="password" style={{fontSize:"1.2rem"}}>Password</p>
           <div className="flex px-2 py-1 bg-slate-200 rounded mt-1 mb-2 focus-within:outline focus-within:outline-blue-300">
             <input
               type={showPassword ? "text" : "password"}
@@ -77,7 +79,8 @@ const Login = () => {
           <button type="submit" className="w-full max-w-[150px] m-auto  bg-red-500 hover:bg-red-600 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4">
             Login
           </button>
-          {error && <p className="text-right mt-2">{error.message}</p>}
+          
+          {error && <Alert sx={{mt:2}} severity="error">{error.message}</Alert>}
         </form>
         <p className="text-left text-sm mt-2">
           Don't have account ?{" "}
