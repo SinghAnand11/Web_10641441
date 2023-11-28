@@ -151,7 +151,7 @@ const Menu = () => {
             {selectedProduct?.category}
           </p>
           <p className=" font-bold md:text-2xl">
-            <span className="text-red-500">£</span>
+            <span className="text-red-500">€</span>
 
             {
               isEditing?(<TextField sx={{ml:1}} type="number" onChange={handleOnChange} name="price" value={editedState.price}></TextField>):(
