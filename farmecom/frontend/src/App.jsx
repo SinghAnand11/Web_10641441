@@ -17,7 +17,6 @@ function App() {
   const userChecked = useSelector(selectisAuthChecked);
 
   useEffect(() => {
-    console.log('checking...')
     dispatch(checkAuthAsync());
   }, [dispatch]);
 
@@ -29,7 +28,6 @@ function App() {
 
   useEffect(() => {
     if(userChecked){
-      console.log('hello')
     }
   }, [userChecked]);
 

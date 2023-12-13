@@ -8,6 +8,7 @@ const authRoutes=require("./routes/Auth")
 const productRoutes=require('./routes/Prouduct')
 const userRoutes=require("./routes/User")
 const cartRoutes=require("./routes/Cart")
+const path = require('path')
 
 
 // databse connection
@@ -33,6 +34,11 @@ server.get("/", (req, res) => {
     res.status(200).json({'message':"running"});
 });
 
+//production script
+app.use(express.static("./frontend/build"));
+app.get("*",(req,res)=>{
+    res.sendFile(path.resolve(__dirname,"frontend","build","index.html"))
+});
 
 server.listen(8000,()=>{
     console.log('server [STARTED] ~ http://localhost:8000')

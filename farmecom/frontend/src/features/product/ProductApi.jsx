@@ -28,7 +28,6 @@ export const createProduct=async(data)=>{
 
 export const updateProductById=async(update)=>{
     try {
-        console.log('sending udpate',update)
         const res=await axiosi.patch(`/products/${update._id}`,update)
         return res.data
     } catch (error) {
